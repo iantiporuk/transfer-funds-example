@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/fund', 'FundController@fund');
+Route::post('/transactions', 'TransactionController@transfer');
+Route::get('/transactions', 'TransactionController@all');

@@ -2,22 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TransferRequest;
 use App\Transaction;
 use App\Wallet;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class FundController extends Controller
+class TransactionController extends Controller
 {
 
     const COMMISSION = 0.015;
 
     /**
-     * @param Request $request
+     * Return all transactions
+     *
+     * @return Transaction[]|Collection
+     */
+    public function all()
+    {
+        return Transaction::all();
+    }
+
+
+    /**
+     * @param TransferRequest $request
      * @return array|bool[]
      * @throws \Throwable
      */
-    public function fund(Request $request)
+    public function transfer(TransferRequest $request)
     {
         $amount = $request->post('amount');
         $sender = $request->post('sender_wallet_id');
@@ -35,7 +47,7 @@ class FundController extends Controller
 
         try {
             DB::beginTransaction();
-            $this->transfer($sender, $destination, $amount);
+            $this->makeTransfer($sender, $destination, $amount);
 
             $transaction->status = Transaction::STATUS_COMMITTED;
             $transaction->save();
@@ -46,6 +58,7 @@ class FundController extends Controller
             DB::rollBack();
             $transaction->status = Transaction::STATUS_CANCELED;
             $transaction->save();
+
             return ['error' => $exception->getMessage()];
         }
     }
@@ -56,7 +69,7 @@ class FundController extends Controller
      * @param float $amount
      * @throws \Throwable
      */
-    private function transfer(int $sender, int $destination, float $amount)
+    private function makeTransfer(int $sender, int $destination, float $amount)
     {
         $senderWallet = Wallet::findOrFail($sender);
         // Maybe need to be saved somewhere

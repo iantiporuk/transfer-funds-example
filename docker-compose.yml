@@ -17,9 +17,6 @@ services:
       - ./:/var/www
       - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-    networks:
-      - app-network
-    command: entrypoint.sh
     depends_on:
       - webserver
       - db
@@ -36,8 +33,6 @@ services:
     volumes:
       - ./:/var/www
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-    networks:
-      - app-network
 
   #Postgres Service
   db:
@@ -51,13 +46,7 @@ services:
       POSTGRES_PASSWORD: laravel
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - app-network
 
-#Docker Networks
-networks:
-  app-network:
-    driver: bridge
 #Volumes
 volumes:
   pgdata:

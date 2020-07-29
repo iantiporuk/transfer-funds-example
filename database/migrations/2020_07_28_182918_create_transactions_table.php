@@ -15,8 +15,16 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
-            $table->foreignId('sender_wallet_id')->constrained('wallets')->nullable()->onDelete('set null');
-            $table->foreignId('destination_wallet_id')->constrained('wallets')->nullable()->onDelete('set null');
+            $table
+                ->foreignId('sender_wallet_id')
+                ->constrained('wallets')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table
+                ->foreignId('destination_wallet_id')
+                ->constrained('wallets')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->float('amount', 7, 2);
             $table->enum('status', ['pending', 'canceled', 'committed']);
             $table->timestamps();
