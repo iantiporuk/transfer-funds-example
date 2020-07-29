@@ -1,16 +1,19 @@
-## Installation
-Once you pull source from github repository you need to install dependencies by running the next command:
-```
-docker-compose exec app composer install
-```
-
 ## Running
 ```
 docker-compose up -d
 ```
 
+## Dependencies Installation
+Once you pull source from github repository you need to install dependencies by running the next command:
+```
+docker-compose exec app composer install
+```
+
 ## Configuration
-Copy .env.docker file to .env
+Copy .env.docker file to .env:
+```
+cp .env.docker .env
+```
 
 ## Migrating
 Migration running on the docker-compose up command but if you need you can fresh your database by executing next command  
