@@ -19,6 +19,7 @@ services:
       - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     networks:
       - app-network
+    command: entrypoint.sh
     depends_on:
       - webserver
       - db

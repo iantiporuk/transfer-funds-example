@@ -21,7 +21,7 @@ class FundController extends Controller
     {
         $amount = $request->post('amount');
         $sender = $request->post('sender_wallet_id');
-        $destination = $request->post('destination_wallet_to');
+        $destination = $request->post('destination_wallet_id');
 
         $transaction = new Transaction(
             [
