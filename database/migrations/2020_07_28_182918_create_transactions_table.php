@@ -14,7 +14,7 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->uuid('uuid');
+            $table->uuid('uuid')->primary();
             $table->foreignId('sender_wallet_id')->constrained('wallets')->nullable()->onDelete('set null');
             $table->foreignId('destination_wallet_id')->constrained('wallets')->nullable()->onDelete('set null');
             $table->float('amount', 7, 2);

@@ -44,9 +44,9 @@ class Transaction extends Model
     const STATUS_CANCELED = 'canceled';
     const STATUS_COMMITTED = 'committed';
 
-    protected $primaryKey = null;
+    protected $primaryKey = 'uuid';
+    protected $keyType = 'string';
     public $incrementing = false;
-
     /**
      * The attributes that are mass assignable.
      *

@@ -34,15 +34,18 @@ class FundController extends Controller
         $transaction->save();
 
         try {
+            DB::beginTransaction();
             $this->transfer($sender, $destination, $amount);
 
             $transaction->status = Transaction::STATUS_COMMITTED;
             $transaction->save();
+            DB::commit();
 
             return ['success' => true];
         } catch (\Exception $exception) {
-            $transaction->status = Transaction::STATUS_CANCELED;
             DB::rollBack();
+            $transaction->status = Transaction::STATUS_CANCELED;
+            $transaction->save();
             return ['error' => $exception->getMessage()];
         }
     }
@@ -55,7 +58,6 @@ class FundController extends Controller
      */
     private function transfer(int $sender, int $destination, float $amount)
     {
-        DB::beginTransaction();
         $senderWallet = Wallet::findOrFail($sender);
         // Maybe need to be saved somewhere
         $commission = $this->calculateCommission($amount);
@@ -71,7 +73,6 @@ class FundController extends Controller
         $destinationWallet = Wallet::findOrFail($destination);
         $destinationWallet->balance += $amount;
         $destinationWallet->save();
-        DB::commit();
     }
 
     /**
